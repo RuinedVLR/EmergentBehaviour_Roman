@@ -6,6 +6,7 @@ public class Spawners : MonoBehaviour
     [Tooltip("References")]
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject objectToSpawn;
+    [SerializeField] float spawnRate = 1f;
 
     System.Random rand = new System.Random();
 
@@ -22,7 +23,12 @@ public class Spawners : MonoBehaviour
     void Update()
     {
         Movement();
-        ShootParticle();
+
+        if (Time.time >= spawnRate)
+        {
+            ShootParticle();
+            spawnRate = Time.time + 1f;
+        }
     }
 
     void Movement()
@@ -39,6 +45,8 @@ public class Spawners : MonoBehaviour
 
     void ShootParticle()
     {
+        GameObject spawnedObject = Instantiate(objectToSpawn, spawnPoint.position, Quaternion.identity);
 
+        spawnedObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 5f, ForceMode2D.Impulse);
     }
 }
